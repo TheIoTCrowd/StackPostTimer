@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         Stack Exchange Timer v2
-// @namespace    http://tampermonkey.net/
+// @name         Stack Exchange Timer
+// @namespace    https://github.com/TheIoTCrowd/StackPostTimer
 // @version      0.1.0
 // @description  Timer to remind you to review Stack Exchange posts
 // @author       Aurora0001
