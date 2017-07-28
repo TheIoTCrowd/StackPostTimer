@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Exchange Timer
 // @namespace    https://github.com/TheIoTCrowd/StackPostTimer
-// @version      0.1.0
+// @version      0.1.1
 // @description  Timer to remind you to review Stack Exchange posts
 // @author       Aurora0001
 // @match        https://*.stackexchange.com/*
@@ -14,6 +14,7 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.js
+// @downloadURL  https://github.com/TheIoTCrowd/StackPostTimer/raw/master/timer.user.js
 // ==/UserScript==
 
 (function() {
