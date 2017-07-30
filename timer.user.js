@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Exchange Timer
 // @namespace    https://github.com/TheIoTCrowd/StackPostTimer
-// @version      0.1.2
+// @version      0.2.0
 // @description  Timer to remind you to review Stack Exchange posts
 // @author       Aurora0001
 // @match        https://*.stackexchange.com/*
