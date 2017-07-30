@@ -31,7 +31,7 @@
         }
 
         .icon-timer.timer-active {
-            fill: #ff8800;
+            fill: #da670b;
         }
 
         #timerDialogue > div {
@@ -130,13 +130,22 @@
     timerIcon.innerHTML = `<svg width="16" height="16" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1024 544v448q0 14-9 23t-23 9h-320q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h224v-352q0-14 9-23t23-9h64q14 0 23 9t9 23zm416 352q0-148-73-273t-198-198-273-73-273 73-198 198-73 273 73 273 198 198 273 73 273-73 198-198 73-273zm224 0q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z"/></svg>`;
     timerIcon.id = "timerDropdown";
     const anyTimerExpired = loadTimers().timers.filter(item => moment().isAfter(moment.unix(item.time))).length > 0;
-    timerIcon.className += `topbar-icon icon-timer ${anyTimerExpired?'timer-active':''}`;
+    timerIcon.className += `topbar-icon -link icon-timer ${anyTimerExpired?'timer-active':''}`;
     timerIcon.onclick = () => {
         const dialogue = document.getElementById("timerDialogueChild");
         if(dialogue.style.display !== "block"){ dialogue.style.display = "block";} else { dialogue.style.display = "none";}
         if(timerIcon.classList.contains("topbar-icon-on")){ timerIcon.classList.remove("topbar-icon-on");}else{timerIcon.classList.add("topbar-icon-on");}
     };
-    const topbar = document.getElementsByClassName("network-items")[0];
+    let topbar = null;
+    if (StackExchange.options.site.name === "Stack Overflow") {
+        const topbarlist = document.getElementsByClassName("js-inbox-button")[0].parentNode.parentNode;
+        topbar = document.createElement("li");
+        topbar.classList += "-list";
+        topbar.style.marginTop = "4px";
+        topbarlist.appendChild(topbar);
+    } else {
+        topbar = document.getElementsByClassName("network-items")[0];
+    }
     topbar.appendChild(timerIcon);
 
     // Timer dropdown dialogue
