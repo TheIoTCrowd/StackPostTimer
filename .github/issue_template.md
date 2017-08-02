@@ -15,7 +15,6 @@ https://www.whatismybrowser.com/
 *example: Chrome 59 on Windows*
 
 #### StackTimer version:
-
 <!-- 
 You can find this in Tampermonkey by finding 'Stack Exchange Timer' in the 
 'Installed userscripts' list. It should be in the format x.y.z.
@@ -24,18 +23,15 @@ You can find this in Tampermonkey by finding 'Stack Exchange Timer' in the
 *example: 0.2.0*
 
 ## Issue
-
 <!-- 
 Please describe your issue/feature request below. Details are good. Screenshots are better.
 Include the steps to reproduce the issue or any proposed changes.
 -->
 
 #### Description:
-
 *TODO*
 
 #### Steps to reproduce:
-
 *TODO (delete this section if not applicable)*
 
 <!-- 
