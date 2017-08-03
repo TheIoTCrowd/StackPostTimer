@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Exchange Timer
 // @namespace    https://github.com/TheIoTCrowd/StackPostTimer
-// @version      0.2.0
+// @version      0.3.0
 // @description  Timer to remind you to review Stack Exchange posts
 // @author       Aurora0001
 // @match        https://*.stackexchange.com/*
@@ -15,6 +15,7 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.js
 // @downloadURL  https://github.com/TheIoTCrowd/StackPostTimer/raw/master/timer.user.js
+// @run-at       document-start
 // ==/UserScript==
 
 (function() {
@@ -125,51 +126,52 @@
         localStorage.setItem("timers", JSON.stringify(timers));
     }
 
-    // Timer icon on topbar
-    const timerIcon = document.createElement("a");
-    timerIcon.innerHTML = `<svg width="16" height="16" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1024 544v448q0 14-9 23t-23 9h-320q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h224v-352q0-14 9-23t23-9h64q14 0 23 9t9 23zm416 352q0-148-73-273t-198-198-273-73-273 73-198 198-73 273 73 273 198 198 273 73 273-73 198-198 73-273zm224 0q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z"/></svg>`;
-    timerIcon.id = "timerDropdown";
-    const anyTimerExpired = loadTimers().timers.filter(item => moment().isAfter(moment.unix(item.time))).length > 0;
-    timerIcon.className += `topbar-icon -link icon-timer ${anyTimerExpired?'timer-active':''}`;
-    timerIcon.onclick = () => {
-        const dialogue = document.getElementById("timerDialogueChild");
-        if(dialogue.style.display !== "block"){ dialogue.style.display = "block";} else { dialogue.style.display = "none";}
-        if(timerIcon.classList.contains("topbar-icon-on")){ timerIcon.classList.remove("topbar-icon-on");}else{timerIcon.classList.add("topbar-icon-on");}
-    };
-    let topbar = null;
-    if (StackExchange.options.site.name === "Stack Overflow") {
-        const topbarlist = document.getElementsByClassName("js-inbox-button")[0].parentNode.parentNode;
-        topbar = document.createElement("li");
-        topbar.classList += "-list";
-        topbar.style.marginTop = "4px";
-        topbarlist.appendChild(topbar);
-    } else {
-        topbar = document.getElementsByClassName("network-items")[0];
-    }
-    topbar.appendChild(timerIcon);
+    function main() {
+        // Timer icon on topbar
+        const timerIcon = document.createElement("a");
+        timerIcon.innerHTML = `<svg width="16" height="16" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1024 544v448q0 14-9 23t-23 9h-320q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h224v-352q0-14 9-23t23-9h64q14 0 23 9t9 23zm416 352q0-148-73-273t-198-198-273-73-273 73-198 198-73 273 73 273 198 198 273 73 273-73 198-198 73-273zm224 0q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z"/></svg>`;
+        timerIcon.id = "timerDropdown";
+        const anyTimerExpired = loadTimers().timers.filter(item => moment().isAfter(moment.unix(item.time))).length > 0;
+        timerIcon.className += `topbar-icon -link icon-timer ${anyTimerExpired?'timer-active':''}`;
+        timerIcon.onclick = () => {
+            const dialogue = document.getElementById("timerDialogueChild");
+            if(dialogue.style.display !== "block"){ dialogue.style.display = "block";} else { dialogue.style.display = "none";}
+            if(timerIcon.classList.contains("topbar-icon-on")){ timerIcon.classList.remove("topbar-icon-on");}else{timerIcon.classList.add("topbar-icon-on");}
+        };
+        let topbar = null;
+        if (StackExchange.options.site.name === "Stack Overflow") {
+            const topbarlist = document.getElementsByClassName("js-inbox-button")[0].parentNode.parentNode;
+            topbar = document.createElement("li");
+            topbar.classList += "-list";
+            topbar.style.marginTop = "4px";
+            topbarlist.appendChild(topbar);
+        } else {
+            topbar = document.getElementsByClassName("network-items")[0];
+        }
+        topbar.appendChild(timerIcon);
 
-    // Timer dropdown dialogue
-    const timerDialogue = document.createElement("div");
-    timerDialogue.id = "timerDialogue";
-    const corral = document.getElementsByClassName("js-topbar-dialog-corral")[0];
-    corral.appendChild(timerDialogue);
+        // Timer dropdown dialogue
+        const timerDialogue = document.createElement("div");
+        timerDialogue.id = "timerDialogue";
+        const corral = document.getElementsByClassName("js-topbar-dialog-corral")[0];
+        corral.appendChild(timerDialogue);
 
-    const getItems = () => loadTimers().timers;
+        const getItems = () => loadTimers().timers;
 
-    // Render dialogue with React
-    /*
+        // Render dialogue with React
+        /*
     class Group extends React.Component {
   constructor(props) {
     super(props);
     this.state = {hidden: false, items: this.props.getItems()};
   }
-  
+
   toggleHidden() {
     this.setState((prevState, props) => ({
       hidden: !prevState.hidden
     }));
   }
-  
+
   render() {
     const listElements = this.state.items.sort((a, b) => {
       return moment.unix(a.time).isAfter(moment.unix(b.time));
@@ -213,7 +215,7 @@ class Item extends React.Component {
 );
   }
 }
-  
+
 
 const CreateTimerPopup = ({postId, callback}) => {
   const popupSubmit = (e) => {
@@ -233,7 +235,7 @@ const CreateTimerPopup = ({postId, callback}) => {
     const timerSeconds = e.target.elements.timeDigit.value * timeMultiplier;
     callback(timerSeconds, e.target.elements.comment.value);
   };
-  
+
   return (
   <div className="popup popup-show">
     <div className="popup-close">
@@ -275,26 +277,38 @@ function createTimerPopup(parent, title, postId) {
       saveTimer(title, time, link, comment, postId);
     }
   };
-  
+
   ReactDOM.render(
     <CreateTimerPopup postId={postId} callback={callback} />,
     parent
   );
 }
 */
-    var _createClass=function(){function c(d,f){for(var h,g=0;g<f.length;g++)h=f[g],h.enumerable=h.enumerable||!1,h.configurable=!0,"value"in h&&(h.writable=!0),Object.defineProperty(d,h.key,h)}return function(d,f,g){return f&&c(d.prototype,f),g&&c(d,g),d}}();function _classCallCheck(c,d){if(!(c instanceof d))throw new TypeError("Cannot call a class as a function")}function _possibleConstructorReturn(c,d){if(!c)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return d&&("object"==typeof d||"function"==typeof d)?d:c}function _inherits(c,d){if("function"!=typeof d&&null!==d)throw new TypeError("Super expression must either be null or a function, not "+typeof d);c.prototype=Object.create(d&&d.prototype,{constructor:{value:c,enumerable:!1,writable:!0,configurable:!0}}),d&&(Object.setPrototypeOf?Object.setPrototypeOf(c,d):c.__proto__=d)}var Group=function(c){function d(f){_classCallCheck(this,d);var g=_possibleConstructorReturn(this,(d.__proto__||Object.getPrototypeOf(d)).call(this,f));return g.state={hidden:!1,items:g.props.getItems()},g}return _inherits(d,c),_createClass(d,[{key:"toggleHidden",value:function toggleHidden(){this.setState(function(f){return{hidden:!f.hidden}})}},{key:"render",value:function render(){this.state.items.sort(function(g,h){return moment.unix(g.time).isAfter(moment.unix(h.time))});return React.createElement("div",{className:"js-date-group date-group"},React.createElement("div",{className:"date-group-toggle-row js-date-group-toggle"},React.createElement("span",{className:"date-header"},this.props.title),React.createElement("a",{className:"date-group-toggle "+(this.state.hidden?"toggle-hidden":""),onClick:this.toggleHidden.bind(this)})),React.createElement("ul",{className:"js-items items "+(this.state.hidden?"items-hidden":"")},this.state.items.map(function(g){return React.createElement(Item,{key:g.id,title:g.title,link:g.link,time:g.time,message:g.message,id:g.id})})))}}]),d}(React.Component),Item=function(c){function d(f){_classCallCheck(this,d);var g=_possibleConstructorReturn(this,(d.__proto__||Object.getPrototypeOf(d)).call(this,f));return g.state={hidden:!1},g}return _inherits(d,c),_createClass(d,[{key:"render",value:function render(){var g=this,f=moment.unix(this.props.time);return React.createElement("li",{className:this.state.hidden?"items-hidden":""},React.createElement("a",{href:this.props.link,className:"link-text"},React.createElement("div",{className:"message-text"},React.createElement("h4",null,this.props.title))),React.createElement("a",{className:"dismiss-link",onClick:function onClick(){removeTimer(g.props.id),g.setState({hidden:!0})}},"dismiss"),React.createElement("span",{title:f.calendar(),className:"date-tooltip rep-change js-rep-change "+(moment().isAfter(f)?"rep-down":"rep-up")},f.fromNow()),React.createElement("span",null,this.props.message))}}]),d}(React.Component),CreateTimerPopup=function(_ref){var c=_ref.postId,d=_ref.callback;return React.createElement("div",{className:"popup popup-show"},React.createElement("div",{className:"popup-close"},React.createElement("a",{title:"close this popup (or hit Esc)",onClick:function onClick(){return setTimeout(function(){return d()},50)}},"\xD7")),React.createElement("div",null,React.createElement("h2",{className:"handle"},"Create Timer"),React.createElement("form",{onSubmit:function f(g){g.preventDefault();var h=0;switch(g.target.elements.time.options[g.target.elements.time.selectedIndex].value){case"minute":h=60;break;case"hour":h=3600;break;case"day":h=86400;}var j=g.target.elements.timeDigit.value*h;d(j,g.target.elements.comment.value)}.bind(void 0)},"Set timer for ",React.createElement("input",{name:"timeDigit",type:"number"}),React.createElement("select",{className:"time-select",name:"time"},React.createElement("option",{value:"minute"},"minutes"),React.createElement("option",{value:"hour"},"hours"),React.createElement("option",{value:"day"},"days")),". Comment: ",React.createElement("input",{type:"text",name:"comment",className:"timer-comment-box"}),React.createElement("input",{type:"submit",value:"Save Timer"}))))};ReactDOM.render(React.createElement("div",{className:"topbar-dialog achievements-dialog dno",id:"timerDialogueChild"},React.createElement("div",{className:"header"},"Post Timers"),React.createElement("div",{className:"modal-content"},React.createElement(Group,{title:"Timers",getItems:getItems}))),timerDialogue);function createTimerPopup(c,d,f){ReactDOM.render(React.createElement(CreateTimerPopup,{postId:f,callback:function g(h,j){if(ReactDOM.unmountComponentAtNode(c),void 0!==h){var k=moment().add(h,"seconds").unix(),l="https://"+window.location.host+"/q/"+f;saveTimer(d,k,l,j,f)}}}),c)}
-    // Insert timer link into post actions
-    const postMenus = document.getElementsByClassName("post-menu");
-    Array.from(postMenus).forEach(postMenu => {
-        const postId = postMenu.getElementsByClassName("flag-post-link")[0].dataset.postid;
-        const title = document.getElementById("question-header").innerText.trim();
-        const popupParent = document.createElement("div");
-        postMenu.appendChild(popupParent);
-        const timerLink = document.createElement("a");
-        timerLink.innerText = "timer";
-        timerLink.onclick = () => {
-            createTimerPopup(popupParent, title, postId);
-        };
-        postMenu.appendChild(timerLink);
-    });
+        var _createClass=function(){function c(d,f){for(var h,g=0;g<f.length;g++)h=f[g],h.enumerable=h.enumerable||!1,h.configurable=!0,"value"in h&&(h.writable=!0),Object.defineProperty(d,h.key,h)}return function(d,f,g){return f&&c(d.prototype,f),g&&c(d,g),d}}();function _classCallCheck(c,d){if(!(c instanceof d))throw new TypeError("Cannot call a class as a function")}function _possibleConstructorReturn(c,d){if(!c)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return d&&("object"==typeof d||"function"==typeof d)?d:c}function _inherits(c,d){if("function"!=typeof d&&null!==d)throw new TypeError("Super expression must either be null or a function, not "+typeof d);c.prototype=Object.create(d&&d.prototype,{constructor:{value:c,enumerable:!1,writable:!0,configurable:!0}}),d&&(Object.setPrototypeOf?Object.setPrototypeOf(c,d):c.__proto__=d)}var Group=function(c){function d(f){_classCallCheck(this,d);var g=_possibleConstructorReturn(this,(d.__proto__||Object.getPrototypeOf(d)).call(this,f));return g.state={hidden:!1,items:g.props.getItems()},g}return _inherits(d,c),_createClass(d,[{key:"toggleHidden",value:function toggleHidden(){this.setState(function(f){return{hidden:!f.hidden}})}},{key:"render",value:function render(){this.state.items.sort(function(g,h){return moment.unix(g.time).isAfter(moment.unix(h.time))});return React.createElement("div",{className:"js-date-group date-group"},React.createElement("div",{className:"date-group-toggle-row js-date-group-toggle"},React.createElement("span",{className:"date-header"},this.props.title),React.createElement("a",{className:"date-group-toggle "+(this.state.hidden?"toggle-hidden":""),onClick:this.toggleHidden.bind(this)})),React.createElement("ul",{className:"js-items items "+(this.state.hidden?"items-hidden":"")},this.state.items.map(function(g){return React.createElement(Item,{key:g.id,title:g.title,link:g.link,time:g.time,message:g.message,id:g.id})})))}}]),d}(React.Component),Item=function(c){function d(f){_classCallCheck(this,d);var g=_possibleConstructorReturn(this,(d.__proto__||Object.getPrototypeOf(d)).call(this,f));return g.state={hidden:!1},g}return _inherits(d,c),_createClass(d,[{key:"render",value:function render(){var g=this,f=moment.unix(this.props.time);return React.createElement("li",{className:this.state.hidden?"items-hidden":""},React.createElement("a",{href:this.props.link,className:"link-text"},React.createElement("div",{className:"message-text"},React.createElement("h4",null,this.props.title))),React.createElement("a",{className:"dismiss-link",onClick:function onClick(){removeTimer(g.props.id),g.setState({hidden:!0})}},"dismiss"),React.createElement("span",{title:f.calendar(),className:"date-tooltip rep-change js-rep-change "+(moment().isAfter(f)?"rep-down":"rep-up")},f.fromNow()),React.createElement("span",null,this.props.message))}}]),d}(React.Component),CreateTimerPopup=function(_ref){var c=_ref.postId,d=_ref.callback;return React.createElement("div",{className:"popup popup-show"},React.createElement("div",{className:"popup-close"},React.createElement("a",{title:"close this popup (or hit Esc)",onClick:function onClick(){return setTimeout(function(){return d()},50)}},"\xD7")),React.createElement("div",null,React.createElement("h2",{className:"handle"},"Create Timer"),React.createElement("form",{onSubmit:function f(g){g.preventDefault();var h=0;switch(g.target.elements.time.options[g.target.elements.time.selectedIndex].value){case"minute":h=60;break;case"hour":h=3600;break;case"day":h=86400;}var j=g.target.elements.timeDigit.value*h;d(j,g.target.elements.comment.value)}.bind(void 0)},"Set timer for ",React.createElement("input",{name:"timeDigit",type:"number"}),React.createElement("select",{className:"time-select",name:"time"},React.createElement("option",{value:"minute"},"minutes"),React.createElement("option",{value:"hour"},"hours"),React.createElement("option",{value:"day"},"days")),". Comment: ",React.createElement("input",{type:"text",name:"comment",className:"timer-comment-box"}),React.createElement("input",{type:"submit",value:"Save Timer"}))))};ReactDOM.render(React.createElement("div",{className:"topbar-dialog achievements-dialog dno",id:"timerDialogueChild"},React.createElement("div",{className:"header"},"Post Timers"),React.createElement("div",{className:"modal-content"},React.createElement(Group,{title:"Timers",getItems:getItems}))),timerDialogue);function createTimerPopup(c,d,f){ReactDOM.render(React.createElement(CreateTimerPopup,{postId:f,callback:function g(h,j){if(ReactDOM.unmountComponentAtNode(c),void 0!==h){var k=moment().add(h,"seconds").unix(),l="https://"+window.location.host+"/q/"+f;saveTimer(d,k,l,j,f)}}}),c)}
+        // Insert timer link into post actions
+        const postMenus = document.getElementsByClassName("post-menu");
+        Array.from(postMenus).forEach(postMenu => {
+            const postId = postMenu.getElementsByClassName("flag-post-link")[0].dataset.postid;
+            const title = (document.getElementById("question-header") || document.getElementsByClassName("question-hyperlink")[0]).innerText.trim();
+            const popupParent = document.createElement("div");
+            postMenu.appendChild(popupParent);
+            const timerLink = document.createElement("a");
+            timerLink.innerText = "timer";
+            timerLink.onclick = () => {
+                createTimerPopup(popupParent, title, postId);
+            };
+            postMenu.appendChild(timerLink);
+        });
+    }
+
+    if (location.href.indexOf("/review/") !== -1) {
+        // /review thinks that it's pretty smart and loads asynchronously. But you ain't gonna stop this userscript!
+        $(document).ajaxSuccess(function(event, XMLHttpRequest, ajaxOptions) {
+            if (ajaxOptions.url.indexOf("/review/next-task") == 0 || ajaxOptions.url.indexOf("/review/task-reviewed") == 0) {
+                setTimeout(main, 1);
+            }
+        });
+    } else {
+        main();
+    }
 })();
