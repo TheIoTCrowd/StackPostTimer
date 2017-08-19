@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Exchange Timer
 // @namespace    https://github.com/TheIoTCrowd/StackPostTimer
-// @version      0.3.0
+// @version      0.3.1
 // @description  Timer to remind you to review Stack Exchange posts
 // @author       Aurora0001
 // @match        https://*.stackexchange.com/*
@@ -15,7 +15,7 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.js
 // @downloadURL  https://github.com/TheIoTCrowd/StackPostTimer/raw/master/timer.user.js
-// @run-at       document-start
+// @run-at       document-end
 // ==/UserScript==
 
 (function() {
@@ -289,7 +289,7 @@ function createTimerPopup(parent, title, postId) {
         const postMenus = document.getElementsByClassName("post-menu");
         Array.from(postMenus).forEach(postMenu => {
             const postId = postMenu.getElementsByClassName("flag-post-link")[0].dataset.postid;
-            const title = (document.getElementById("question-header") || document.getElementsByClassName("question-hyperlink")[0]).innerText.trim();
+            const title = (document.getElementById("question-header").childNodes[1] || document.getElementsByClassName("question-hyperlink")[0]).innerText.trim();
             const popupParent = document.createElement("div");
             postMenu.appendChild(popupParent);
             const timerLink = document.createElement("a");
