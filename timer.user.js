@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Exchange Timer
 // @namespace    https://github.com/TheIoTCrowd/StackPostTimer
-// @version      0.3.1
+// @version      0.3.2
 // @description  Timer to remind you to review Stack Exchange posts
 // @author       Aurora0001
 // @match        https://*.stackexchange.com/*
@@ -36,7 +36,7 @@
         }
 
         #timerDialogue > div {
-            left: 231px;
+            position: absolute;
             top: 35px;
         }
         .items-hidden {
@@ -135,7 +135,16 @@
         timerIcon.className += `topbar-icon -link icon-timer ${anyTimerExpired?'timer-active':''}`;
         timerIcon.onclick = () => {
             const dialogue = document.getElementById("timerDialogueChild");
+            const boundingBoxTimer = document.getElementById("timerDropdown").getBoundingClientRect();
+            const boundingBoxTopbar = (document.getElementsByClassName("topbar-wrapper")[0] || document.getElementsByClassName("-container")[0]).getBoundingClientRect();
+            let left = boundingBoxTimer.left - boundingBoxTopbar.left;
+            if (left + 375 > window.innerWidth) {
+                left -= 375;
+                left += (boundingBoxTimer.right - boundingBoxTimer.left);
+            }
             if(dialogue.style.display !== "block"){ dialogue.style.display = "block";} else { dialogue.style.display = "none";}
+            dialogue.style.left = left.toString() + "px";
+            dialogue.style.top = boundingBoxTimer.bottom.toString() + "px";
             if(timerIcon.classList.contains("topbar-icon-on")){ timerIcon.classList.remove("topbar-icon-on");}else{timerIcon.classList.add("topbar-icon-on");}
         };
         let topbar = null;
