@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Exchange Timer
 // @namespace    https://github.com/TheIoTCrowd/StackPostTimer
-// @version      0.3.2
+// @version      0.3.3
 // @description  Timer to remind you to review Stack Exchange posts
 // @author       Aurora0001
 // @match        https://*.stackexchange.com/*
@@ -157,7 +157,10 @@
         } else {
             topbar = document.getElementsByClassName("network-items")[0];
         }
-        topbar.appendChild(timerIcon);
+        
+        if (document.getElementById("timerDropdown") == null) {
+            topbar.appendChild(timerIcon);
+        }
 
         // Timer dropdown dialogue
         const timerDialogue = document.createElement("div");
