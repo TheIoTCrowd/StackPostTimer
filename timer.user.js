@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Exchange Timer
 // @namespace    https://github.com/TheIoTCrowd/StackPostTimer
-// @version      0.3.3
+// @version      0.3.4
 // @description  Timer to remind you to review Stack Exchange posts
 // @author       Aurora0001
 // @match        https://*.stackexchange.com/*
@@ -148,11 +148,11 @@
             if(timerIcon.classList.contains("topbar-icon-on")){ timerIcon.classList.remove("topbar-icon-on");}else{timerIcon.classList.add("topbar-icon-on");}
         };
         let topbar = null;
-        if (StackExchange.options.site.name === "Stack Overflow") {
+        if ($("header").length > 0) {
             const topbarlist = document.getElementsByClassName("js-inbox-button")[0].parentNode.parentNode;
             topbar = document.createElement("li");
             topbar.classList += "-list";
-            topbar.style.marginTop = "4px";
+            topbar.style.marginTop = StackExchange.options.site.name === "Stack Overflow" ? "4px" : "6px";
             topbarlist.appendChild(topbar);
         } else {
             topbar = document.getElementsByClassName("network-items")[0];
