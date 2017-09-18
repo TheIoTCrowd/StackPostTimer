@@ -152,7 +152,7 @@
             const topbarlist = document.getElementsByClassName("js-inbox-button")[0].parentNode.parentNode;
             topbar = document.createElement("li");
             topbar.classList += "-list";
-            topbar.style.marginTop = StackExchange.options.site.name === "Stack Overflow" ? "4px" : "6px";
+            topbar.style.marginTop = StackExchange.options.site.name === "Stack Overflow" ? "15px" : "6px";
             topbarlist.appendChild(topbar);
         } else {
             topbar = document.getElementsByClassName("network-items")[0];
