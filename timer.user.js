@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Exchange Timer
 // @namespace    https://github.com/TheIoTCrowd/StackPostTimer
-// @version      0.3.4
+// @version      0.3.5
 // @description  Timer to remind you to review Stack Exchange posts
 // @author       Aurora0001
 // @match        https://*.stackexchange.com/*
@@ -152,7 +152,7 @@
             const topbarlist = document.getElementsByClassName("js-inbox-button")[0].parentNode.parentNode;
             topbar = document.createElement("li");
             topbar.classList += "-list";
-            topbar.style.marginTop = StackExchange.options.site.name === "Stack Overflow" ? "15px" : "6px";
+            topbar.style.marginTop = "10px";
             topbarlist.appendChild(topbar);
         } else {
             topbar = document.getElementsByClassName("network-items")[0];
