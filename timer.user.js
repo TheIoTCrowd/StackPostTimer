@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Stack Exchange Timer
 // @namespace    https://github.com/TheIoTCrowd/StackPostTimer
-// @version      0.3.5
+// @version      0.3.6
 // @description  Timer to remind you to review Stack Exchange posts
 // @author       Aurora0001
 // @match        https://*.stackexchange.com/*
 // @match        https://stackoverflow.com/*
+// @match        https://*.stackoverflow.com/*
 // @match        https://superuser.com/*
 // @match        https://serverfault.com/*
 // @match        https://askubuntu.com/*
@@ -26,7 +27,7 @@
         .topbar-icon.icon-timer {
             background: transparent !important;
             fill: #858c93;
-            padding-top: 8px;
+            margin-top: -9px;
             height: 26px;
             width: 36px;
         }
