@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Exchange Timer
 // @namespace    https://github.com/TheIoTCrowd/StackPostTimer
-// @version      0.3.6
+// @version      0.3.7
 // @description  Timer to remind you to review Stack Exchange posts
 // @author       Aurora0001
 // @match        https://*.stackexchange.com/*
@@ -137,7 +137,7 @@
         timerIcon.onclick = () => {
             const dialogue = document.getElementById("timerDialogueChild");
             const boundingBoxTimer = document.getElementById("timerDropdown").getBoundingClientRect();
-            const boundingBoxTopbar = (document.getElementsByClassName("topbar-wrapper")[0] || document.getElementsByClassName("-container")[0]).getBoundingClientRect();
+            const boundingBoxTopbar = (document.getElementsByClassName("topbar-dialog")[0] || document.getElementsByClassName("-container")[0]).getBoundingClientRect();
             let left = boundingBoxTimer.left - boundingBoxTopbar.left;
             if (left + 375 > window.innerWidth) {
                 left -= 375;
